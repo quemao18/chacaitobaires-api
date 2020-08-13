@@ -65,9 +65,7 @@ node_modules/
 # dotenv environment variables file
 .env
 
-funtions/src/credentials-dev.json
-funtions/src/credentials-prod.json
-funtions/dist/credentials-dev.json
-funtions/dist/credentials-prod.json
+functions/src/credentials-dev.json
+functions/src/credentials-prod.json
 
-funtions/dist/
+functions/dist/
