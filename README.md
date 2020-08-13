@@ -16,3 +16,12 @@ API REST with firestores, in nodejs with express, cloud functions
   "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
   "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-hn8hj%40chacaitobaires-dev-api.iam.gserviceaccount.com"
 }
+
+
+## RUN
+
+`npm run serve`
+
+## Build in firebase
+`npm run build-fire-dev`
+`npm run build-fire-prod`
