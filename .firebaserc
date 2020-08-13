@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "dev": "chacaitobaires-dev-api",
+    "prod": "chacaitobaires-api"
+  }
+}
