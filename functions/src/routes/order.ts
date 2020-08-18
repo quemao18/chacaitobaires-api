@@ -1,6 +1,6 @@
 import { Request, Response, Router } from 'express';
 import { checkIfAuthenticated, checkIfAdmin } from '../helpers/auth';
-import { getDocs, getDoc, createDoc, updateDoc, deleteDoc, getDocsByStatus, getDocsByOrderId } from '../endpoints/orders';
+import { getDocs, getDoc, createDoc, updateDoc, deleteDoc, getDocsByStatus, getDocsByOrderId, sendWa, sendWa2 } from '../endpoints/orders';
 
 const collection = 'orders';
 
@@ -44,6 +44,17 @@ export const routesOrder = (app: Router, db: FirebaseFirestore.Firestore) => {
     // DELETE /user
     app.delete(`/${collection}/:id`, checkIfAuthenticated, checkIfAdmin, (req: Request, res: Response) => {
         deleteDoc(req, res, db).catch(err => console.log(err));
+        return;
+    });
+
+    // POST /user
+    app.get(`/${collection}/sendwa/:id`, async (req: Request, res: Response) => {
+        sendWa(req, res, db).catch(err => console.log(err));
+        return;
+    });
+
+    app.get(`/${collection}/sendwa2/:id`, async (req: Request, res: Response) => {
+        sendWa2(req, res, db).catch(err => console.log(err));
         return;
     });
   

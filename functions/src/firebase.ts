@@ -3,10 +3,13 @@ import * as serviceAccountDev from "./credentials-dev.json";
 import * as serviceAccountProd from "./credentials-prod.json";
 import * as functions from 'firebase-functions';
 
-const serviceAccount = functions.config().app.environment === 'dev' ?
+// const env = process.env.GCLOUD_PROJECT === 'prod' ? 'prod' : 'dev';
+const env = functions.config().app.environment === 'prod' ? 'prod' : 'dev';
+
+const serviceAccount = env === 'dev' ?
 serviceAccountDev : serviceAccountProd;
 
-const databaseURL = functions.config().app.environment === 'dev' ?
+const databaseURL = env === 'dev' ?
 "https://chacaitobaires-dev-api.firebaseio.com" : "https://chacaitobaires-api.firebaseio.com";
 
 const params = {
@@ -27,6 +30,7 @@ admin.initializeApp({
   credential: admin.credential.cert(params),
   databaseURL: databaseURL
 });
+
 // Set up database connection
 const firestoreDb: FirebaseFirestore.Firestore = admin.firestore();
 firestoreDb.settings({ timestampsInSnapshots: true });

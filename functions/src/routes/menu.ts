@@ -8,7 +8,7 @@ export const routesMenu = (app: Router, db: FirebaseFirestore.Firestore) => {
   
     // GET /users
     app.get(`/${collection}`, (req: Request, res: Response) => {
-        getDocs(res, db).catch(err => console.log(err));
+        getDocs(res, db).catch(error =>{ res.status(500).send(error); });
         return;
     });
 
