@@ -53,6 +53,30 @@ export const getDocsByOrderId = async (req: Request, res: Response, db: Firebase
   return;
 };
 
+export const getDocsByTable = async (req: Request, res: Response, db: FirebaseFirestore.Firestore) => {
+  try {
+      const table = req.params.table;
+      const querySnapshot = await db.collection(collection)
+      .where('table', '==', parseInt(table))
+      .where('status', '==', 'Readed')
+      .orderBy('date', 'desc')
+      .get();
+      const docs: any = [];
+      querySnapshot.forEach(
+          (doc) => {
+              docs.push({
+                  id: doc.id,
+                  data: doc.data()
+              });
+          }
+      );
+      res.send(docs);
+    } catch(error){
+      res.status(500).send(error);
+    }
+  return;
+};
+
 export const getDocs = async (res: Response, db: FirebaseFirestore.Firestore) => {
   try {
       const querySnapshot = await db.collection(collection)

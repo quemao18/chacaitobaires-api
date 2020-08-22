@@ -1,6 +1,5 @@
 import { Request, Response, Router } from 'express';
-import { checkIfAuthenticated, checkIfAdmin } from '../helpers/auth';
-import { getDocs, getDoc, createDoc, updateDoc, deleteDoc, getDocsByStatus, getDocsByOrderId, sendWa, sendWa2 } from '../endpoints/orders';
+import { getDocs, getDoc, createDoc, updateDoc, deleteDoc, getDocsByStatus, getDocsByOrderId, sendWa, sendWa2, getDocsByTable } from '../endpoints/orders';
 
 const collection = 'orders';
 
@@ -23,6 +22,11 @@ export const routesOrder = (app: Router, db: FirebaseFirestore.Firestore) => {
         return;
     });
 
+    app.get(`/${collection}/table/:table`, (req: Request, res: Response) => {
+        getDocsByTable(req, res, db).catch(err => console.log(err));
+        return;
+    });
+
     // GET /user/:id
     app.get(`/${collection}/:id`, (req: Request, res: Response) => {
         getDoc(req, res, db).catch(err => console.log(err));
@@ -42,7 +46,7 @@ export const routesOrder = (app: Router, db: FirebaseFirestore.Firestore) => {
     });
 
     // DELETE /user
-    app.delete(`/${collection}/:id`, checkIfAuthenticated, checkIfAdmin, (req: Request, res: Response) => {
+    app.delete(`/${collection}/:id`, (req: Request, res: Response) => {
         deleteDoc(req, res, db).catch(err => console.log(err));
         return;
     });
