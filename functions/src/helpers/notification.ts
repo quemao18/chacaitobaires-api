@@ -16,9 +16,19 @@ export const sendWa = async (req: Request, res: Response, db: FirebaseFirestore.
                 });
             });
         } 
+
         if(order.status === 'Deleted'){
             msg = `-- Pedido eliminado: ${order.orderId} --`;
         }
+
+        if(order.status === 'Readed'){
+            msg = `-- Pedido leído por mesonero: ${order.orderId}. Mesa: ${order.table} --`;
+        }
+
+        if(order.status === 'Finished'){
+            msg = `-- Pedido cargado en comanda: ${order.orderId}. Mesa: ${order.table} --`;
+        }
+
         setTimeout(() => {
             https.get(`https://api.callmebot.com/whatsapp.php?phone=+${waTo}&text=${msg}&apikey=${apiKeyWaFree}`, (resp) => {
             let data = '';
