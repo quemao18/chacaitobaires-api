@@ -1,5 +1,6 @@
 import { Request, Response, Router } from 'express';
-import { getDocs, getDoc, createDoc, updateDoc, deleteDoc, getDocsByStatus, getDocsByOrderId, sendWa, sendWa2, getDocsByTable } from '../endpoints/orders';
+import { getDocs, getDoc, createDoc, updateDoc, deleteDoc, getDocsByStatus, getDocsByOrderId, getDocsByTable } from '../endpoints/orders';
+import { sendWa } from '../helpers/notification';
 
 const collection = 'orders';
 
@@ -51,15 +52,9 @@ export const routesOrder = (app: Router, db: FirebaseFirestore.Firestore) => {
         return;
     });
 
-    // POST /user
-    app.get(`/${collection}/sendwa/:id`, async (req: Request, res: Response) => {
+    //send whatsapp msg
+    app.post(`/${collection}/sendWa`, async (req: Request, res: Response) => {
         sendWa(req, res, db).catch(err => console.log(err));
         return;
     });
-
-    app.get(`/${collection}/sendwa2/:id`, async (req: Request, res: Response) => {
-        sendWa2(req, res, db).catch(err => console.log(err));
-        return;
-    });
-  
 };
