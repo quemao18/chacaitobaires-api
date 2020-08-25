@@ -7,7 +7,7 @@ export const sendWa = async (req: Request, res: Response, db: FirebaseFirestore.
         const order = req.body;
         let msg = '';
         if(order.status === 'Pending'){
-            msg = `-- Pedido realizado: ${order.orderId} --%0A`;
+            msg = `-- Órden nueva: ${order.orderId} --%0A`;
             order.items.forEach(async(element: any) => {
                 await db.collection('menus').doc(element.data.menuId).get().then((menu:any) => {
                 const name = menu.data().name.es;
@@ -18,15 +18,15 @@ export const sendWa = async (req: Request, res: Response, db: FirebaseFirestore.
         } 
 
         if(order.status === 'Deleted'){
-            msg = `-- Pedido eliminado: ${order.orderId} --`;
+            msg = `-- Órden eliminada: ${order.orderId} --`;
         }
 
         if(order.status === 'Readed'){
-            msg = `-- Pedido leído por mesonero: ${order.orderId}. Mesa: ${order.table} --`;
+            msg = `-- Órden leída por mesonero: ${order.orderId}. Mesa: ${order.table} --`;
         }
 
         if(order.status === 'Finished'){
-            msg = `-- Pedido cargado en comanda: ${order.orderId}. Mesa: ${order.table} --`;
+            msg = `-- Órden cargada en comanda: ${order.orderId}. Mesa: ${order.table} --`;
         }
 
         setTimeout(() => {
