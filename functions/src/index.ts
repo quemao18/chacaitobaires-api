@@ -5,7 +5,7 @@ import { db } from './firebase'
 // Initialize Rest API
 const express = rest(db);
 const settings: RuntimeOptions = {
-    timeoutSeconds: 60,
-    memory: '512MB'
+    timeoutSeconds: 30,
+    memory: '128MB'
 };
 export const api = runWith(settings).https.onRequest(express);
