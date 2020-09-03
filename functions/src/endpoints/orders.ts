@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+// import { sendFCM } from '../helpers/notification';
 
 const collection = 'orders';
 
@@ -122,6 +123,13 @@ export const getDoc = async (req: Request, res: Response, db: FirebaseFirestore.
 export const createDoc = async (req: Request, res: Response, db: FirebaseFirestore.Firestore) => {
   try {
       const ref = await db.collection(collection).add(req.body);
+      // const querySnapshot = await db.collection('users').get();
+      // querySnapshot.forEach(
+      //     (doc) => {
+      //       if(doc.data().tokenFCM)
+      //       sendFCM('New Order', req.body.orderId, doc.data().tokenFCM, res);
+      //     }
+      // );
       res.send({
         id: ref.id,
         data: req.body
