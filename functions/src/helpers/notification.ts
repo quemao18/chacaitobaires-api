@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { waTo, apiKeyWaFree } from '../credentials-dev.json';
 import  * as https from 'https';
-import admin = require('firebase-admin');
 
 export const sendWa = async (req: Request, res: Response, db: FirebaseFirestore.Firestore) => {
     try {
@@ -55,21 +54,23 @@ export const sendWa = async (req: Request, res: Response, db: FirebaseFirestore.
     return;
   };
 
-  export const sendFCM = async (title: string, text: string, token: string | string[], res: Response) => {
-    try {
-      const payload = {
-        notification: {
-          title: title,
-          body: text
-            ? text.length <= 100 ? text : text.substring(0, 97) + "..."
-            : ""
-        }
-      };
-      admin.messaging().sendToDevice(token, payload);
-    } catch(error){
-      res.status(500).send(error);
-    }
+  // export const sendFCM2 = async (title: string, text: string, url:string, token: string | string[], res: Response) => {
+  //   try {
+  //     const payload = {
+  //       notification: {
+  //         title: title,
+  //         body: text ? text.length <= 100 ? text : text.substring(0, 97) + "..." : "",
+  //         tag: text
+  //       },
+  //       data: {
+  //         url: '/#/'+url
+  //       }
+  //     };
+  //     admin.messaging().sendToDevice(token, payload);
+  //   } catch(error){
+  //     res.status(500).send(error);
+  //   }
         
-  };
+  // };
   
 

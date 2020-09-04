@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-// import { sendFCM } from '../helpers/notification';
+import admin = require('firebase-admin');
 
 const collection = 'orders';
 
@@ -123,13 +123,6 @@ export const getDoc = async (req: Request, res: Response, db: FirebaseFirestore.
 export const createDoc = async (req: Request, res: Response, db: FirebaseFirestore.Firestore) => {
   try {
       const ref = await db.collection(collection).add(req.body);
-      // const querySnapshot = await db.collection('users').get();
-      // querySnapshot.forEach(
-      //     (doc) => {
-      //       if(doc.data().tokenFCM)
-      //       sendFCM('New Order', req.body.orderId, doc.data().tokenFCM, res);
-      //     }
-      // );
       res.send({
         id: ref.id,
         data: req.body
@@ -177,6 +170,42 @@ export const deleteDoc = async (req: Request, res: Response, db: FirebaseFiresto
       res.send({
         id: docId,
       });
+    } catch(error){
+      res.status(500).send(error);
+    }
+  return;
+};
+
+export const sendFCM = async (req: Request, res: Response, db: FirebaseFirestore.Firestore) => {
+  try {
+      const order = req.body;
+      const title = req.body.status === 'Pending' ? 
+      'New Order':  req.body.status === 'Deleted' ? 
+      'Order Deleted': req.body.status === 'Readed' ?
+      'Order Readed': req.body.status === 'Finished' ?
+      'Order Finished' : '';
+      const table = req.body.table;
+      let text = order.orderId;
+      text+= table ? ' - Table: ' + table : '';
+
+      const querySnapshot = await db.collection('users').get();
+      querySnapshot.forEach(
+          (doc) => {
+            const url = doc.data().isAdmin ? 'orders' : 'tables';
+            const payload = {
+              notification: {
+                title: title,
+                body: text ? text.length <= 100 ? text : text.substring(0, 97) + "..." : ""
+              },
+              data: {
+                url: '/#/' + url
+              }
+            };
+            if(doc.data().tokenFCM)
+              admin.messaging().sendToDevice(doc.data().tokenFCM, payload)
+              .catch((error)=> res.status(500).send(error));
+          }
+      );
     } catch(error){
       res.status(500).send(error);
     }
