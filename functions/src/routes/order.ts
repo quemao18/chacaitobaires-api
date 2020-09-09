@@ -1,5 +1,5 @@
 import { Request, Response, Router } from 'express';
-import { getDocs, getDoc, createDoc, updateDoc, deleteDoc, getDocsByStatus, getDocsByOrderId, getDocsByTable, sendFCM } from '../endpoints/orders';
+import { getDocs, getDoc, createDoc, updateDoc, deleteDoc, getDocsByStatus, getDocsByOrderId, getDocsByTableId, sendFCM } from '../endpoints/orders';
 import { sendWa } from '../helpers/notification';
 
 const collection = 'orders';
@@ -23,8 +23,8 @@ export const routesOrder = (app: Router, db: FirebaseFirestore.Firestore) => {
         return;
     });
 
-    app.get(`/${collection}/table/:table`, (req: Request, res: Response) => {
-        getDocsByTable(req, res, db).catch(err => console.log(err));
+    app.get(`/${collection}/tableId/:tableId`, (req: Request, res: Response) => {
+        getDocsByTableId(req, res, db).catch(err => console.log(err));
         return;
     });
 
@@ -53,13 +53,13 @@ export const routesOrder = (app: Router, db: FirebaseFirestore.Firestore) => {
     });
 
     //send whatsapp msg
-    app.post(`/${collection}/sendWa`, async (req: Request, res: Response) => {
+    app.post(`/${collection}/sendWa`, (req: Request, res: Response) => {
         sendWa(req, res, db).catch(err => console.log(err));
         return;
     });
 
     //send whatsapp msg
-    app.post(`/${collection}/sendFCM`, async (req: Request, res: Response) => {
+    app.post(`/${collection}/sendFCM`, (req: Request, res: Response) => {
         sendFCM(req, res, db).catch(err => console.log(err));
         return;
     });

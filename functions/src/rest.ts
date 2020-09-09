@@ -5,6 +5,7 @@ import { routesMenu } from './routes/menu';
 import { routesDish } from './routes/dish';
 import { routesOrder } from './routes/order';
 import { routesSetting } from './routes/setting';
+import { routesTable } from './routes/table';
 
 export const rest = (db: FirebaseFirestore.Firestore): any => {
 
@@ -42,6 +43,7 @@ export const rest = (db: FirebaseFirestore.Firestore): any => {
     routesDish(app, db);
     routesOrder(app, db);
     routesSetting(app, db);
+    routesTable(app, db);
     // Done! 
     return app;
 

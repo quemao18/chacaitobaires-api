@@ -1,14 +1,14 @@
 import { Request, Response, Router } from 'express';
+import { getDocs, getDoc, createDoc, updateDoc, deleteDoc, getDocsByStatus } from '../endpoints/tables';
 import { checkIfAuthenticated } from '../helpers/auth';
-import { getDocs, getDoc, createDoc, updateDoc, deleteDoc, getDocsByStatus } from '../endpoints/menus';
 
-const collection = 'menus';
+const collection = 'tables';
 
-export const routesMenu = (app: Router, db: FirebaseFirestore.Firestore) => {
+export const routesTable = (app: Router, db: FirebaseFirestore.Firestore) => {
   
     // GET /users
     app.get(`/${collection}`, (req: Request, res: Response) => {
-        getDocs(res, db).catch(error =>{ res.status(500).send(error); });
+        getDocs(res, db).catch(err => console.log(err));
         return;
     });
 
@@ -41,5 +41,5 @@ export const routesMenu = (app: Router, db: FirebaseFirestore.Firestore) => {
         deleteDoc(req, res, db).catch(err => console.log(err));
         return;
     });
-  
+
 };

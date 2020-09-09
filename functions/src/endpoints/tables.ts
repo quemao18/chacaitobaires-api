@@ -1,63 +1,14 @@
 import { Request, Response } from 'express';
-import admin = require('firebase-admin');
 
-const collection = 'orders';
+const collection = 'tables';
 
+// GET /Users
 export const getDocsByStatus = async (req: Request, res: Response, db: FirebaseFirestore.Firestore) => {
   try {
-      const status = req.params.status;
+      const status = req.params.status === 'true' ? true : false;
       const querySnapshot = await db.collection(collection)
       .where('status', '==', status)
-      .orderBy('date', 'desc')
-      .get();
-      const docs: any = [];
-      querySnapshot.forEach(
-          (doc) => {
-              docs.push({
-                  id: doc.id,
-                  // data: doc.data(),
-                  status: doc.data().status,
-                  items: doc.data()
-              });
-          }
-      );
-      res.send(docs);
-    } catch(error){
-      res.status(500).send(error);
-    }
-  return;
-};
-
-export const getDocsByOrderId = async (req: Request, res: Response, db: FirebaseFirestore.Firestore) => {
-  try {
-      const orderId = req.params.id;
-      const querySnapshot = await db.collection(collection)
-      .where('orderId', '==', orderId)
-      .orderBy('date', 'desc')
-      .get();
-      const docs: any = [];
-      querySnapshot.forEach(
-          (doc) => {
-              docs.push({
-                  id: doc.id,
-                  data: doc.data()
-              });
-          }
-      );
-      res.send(docs);
-    } catch(error){
-      res.status(500).send(error);
-    }
-  return;
-};
-
-export const getDocsByTableId = async (req: Request, res: Response, db: FirebaseFirestore.Firestore) => {
-  try {
-      const tableId = req.params.tableId;
-      const querySnapshot = await db.collection(collection)
-      .where('tableId', '==', (tableId))
-      .where('status', '==', 'Readed')
-      .orderBy('date', 'desc')
+      .orderBy('order', 'asc')
       .get();
       const docs: any = [];
       querySnapshot.forEach(
@@ -78,19 +29,15 @@ export const getDocsByTableId = async (req: Request, res: Response, db: Firebase
 export const getDocs = async (res: Response, db: FirebaseFirestore.Firestore) => {
   try {
       const querySnapshot = await db.collection(collection)
-      .orderBy('date', 'desc')
+      .orderBy('order', 'asc')
       .get();
       const docs: any = [];
       querySnapshot.forEach(
           (doc) => {
-            const sum = doc.data().items.reduce(function (total: any, currentValue: { qty: number, data: { price: any; }; }) {
-              return currentValue.data.price ? total + currentValue.data.price * currentValue.qty : 0;
-            }, 0);
-            docs.push({
-                id: doc.id,
-                data: doc.data(),
-                total: sum
-            });
+              docs.push({
+                  id: doc.id,
+                  data: doc.data()
+              });
           }
       );
       res.send(docs);
@@ -175,41 +122,3 @@ export const deleteDoc = async (req: Request, res: Response, db: FirebaseFiresto
     }
   return;
 };
-
-export const sendFCM = async (req: Request, res: Response, db: FirebaseFirestore.Firestore) => {
-  try {
-      const order = req.body;
-      const title = req.body.status === 'Pending' ? 
-      'New Order':  req.body.status === 'Deleted' ? 
-      'Order Deleted': req.body.status === 'Readed' ?
-      'Order Readed': req.body.status === 'Finished' ?
-      'Order Finished' : '';
-      const table = req.body.table;
-      let text = order.orderId;
-      text+= table ? ' - Table: ' + table : '';
-
-      const querySnapshot = await db.collection('users').get();
-      querySnapshot.forEach(
-          (doc) => {
-            const url = doc.data().isAdmin ? 'orders' : 'tables';
-            const payload = {
-              notification: {
-                title: title,
-                body: text ? text.length <= 100 ? text : text.substring(0, 97) + "..." : ""
-              },
-              data: {
-                url: '/#/' + url
-              }
-            };
-            if(doc.data().tokenFCM)
-              admin.messaging().sendToDevice(doc.data().tokenFCM, payload)
-              .catch((error)=> res.status(500).send(error));
-          }
-      );
-    } catch(error){
-      res.status(500).send(error);
-    }
-  return;
-};
-
-

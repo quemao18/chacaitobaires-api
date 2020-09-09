@@ -31,7 +31,7 @@ export const routesDish = (app: Router, db: FirebaseFirestore.Firestore) => {
     });
 
     // POST /user
-    app.post(`/${collection}`, checkIfAuthenticated, async (req: Request, res: Response) => {
+    app.post(`/${collection}`, checkIfAuthenticated, (req: Request, res: Response) => {
         createDoc(req, res, db).catch(err => console.log(err));
         return;
     });
